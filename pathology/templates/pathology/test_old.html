@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Bill Form by Josim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{% load static %}
+<style>
+body {
+	background-color:#e8e2d7;
+	}
+	
+ .header{
+  border: 5px outset white;
+  background-color: #39ac39;    
+  text-align: center;
+  color:white;
+}
+
+button{
+	border: 4px outset white;
+	background-color: #39ac39;    
+	text-align: center;
+	color:white;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 2px solid #dddddd;
+  text-align: left;
+  padding: 6px;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+.column-1, .column-2 {
+  float: left;
+  width: 33%;
+  padding: 10px;
+
+}
+
+
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
+button{
+	height:40px;
+	width: 60px;
+}
+</style>
+
+
+</head>
+
+<body>
+<!--Header-->
+<div>
+<div class="header"><h3>TEST BILL FORM</h3></div>
+
+
+    <div>
+      {% if msg %}
+        <h2 style="color: red;">{{ msg|upper }}</h2>
+      {% endif %}
+    </div>
+<!--First input-->
+</div>
+
+
+
+<div class="container-fluid" id="fluid">
+<div>
+<div class="column-1">
+
+	<form action="{% url 'testbill' %}" method="post">
+		{% csrf_token %}
+	<table>
+		<tr>
+			<td>Serial No:  </td>
+			<td> <input placeholder="input serial" value="{{ obj.id }}"></td>
+		</tr>
+	</table>
+</div>
+
+<div class="column-1">
+	<table>
+		<tr>
+			<button1 class="btn btn-primary" name="submit" role="button">Find</button1> &nbsp;
+			<a class="btn btn-primary" href="{% url 'testbill' %}" role="button">New Bill</a>
+			&emsp;&emsp;  Date <input type="" value="{{ object.ordered_date }}">
+		</tr>
+	</table>	
+</div>
+	
+</div>
+	</form>
+ </hr>
+
+<!---Test Select --->
+
+ </br>
+
+
+
+
+
+
+
+<!---JSON Part of Html--->
+
+
+	<div class="row" id="row_container">
+		<div class="col-md-11 bg-warning pad" style="padding-top: 15px;margin-left:12px">
+       <div class="form-inline">
+
+      	<div class="form-group " style="display: inline">
+
+
+  <label for="usr" style="margin-left:60px">Name:</label>
+  <input type="text" autocomplete="off" class="form-control" id="retailer_name" list="retailer_list_show" style="width:40%" value="{{ obj.name }}">
+
+  <datalist class="retailer_list_show" id="retailer_list_show">
+  	{% for retail_name in retailers %}
+  	<option value="{{retail_name.name}}">
+  	{% endfor %}
+  </datalist>
+
+
+   <label for="usr" style="margin-left:20px">Address:</label>
+  <input type="text" autocomplete="off" class="form-control" id="retailer_address" list="retailer_address_show" style="width:40%" value="{{ obj.address }}"> 
+  
+  <datalist class="retailer_list_show" id="retailer_address_show">
+  	{% for retail_name in retailers %}
+  	<option value="{{retail_name.address}}">
+  	{% endfor %}
+  </datalist>
+
+
+
+</div>
+<!--print image-->
+<label for="pwd">
+	<img id="print" src="{% static 'img/print.png' %}" height="36px" width="36px">
+</label>
+<!--end print image-->
+
+
+
+</div>
+
+<!--for adding multiple raw-material to actual product-->
+<div class="form-inline">
+	<div class="form-group" style="margin-top:14px">
+		<label for="usr" style="margin-left: 46px">Product:</label>
+		<input type="text" autocomplete="off" class="form-control" name="material-for-product" list="product_list">
+		<datalist class="product_list" id="product_list">
+			{% for product in product %}
+				<option value="{{product.title}}" >
+			{% endfor %}
+		</datalist>
+
+			<label for="usr">pack:</label>
+    		<input type="number" class="form-control" id="raw_material_price" style="width:90px">
+
+
+			<button class="btn btn-info downarrow" height="30" width="30" style="margin-left:10px;">Add</button>
+
+
+			<!--plus new window of sale to saleman-->
+			<button class="btn btn-danger send_button_retail" style="margin-left:10px;">View</button>
+
+			<!--plus new window ends here-->
+
+
+	</div>
+
+</div>
+<!--end of th above comment of multiple raw material-->
+
+<!--temporary table starts here-->
+<div>
+<table class="table table-bordered table-hover" style="background-color: white;margin-top: 16px">
+			    <thead>
+			      <tr>
+			        <th>Test name</th>
+			        <th style="width: 80px">quantity</th>
+			        <th style="width:120px">action</th>
+			      </tr>
+			    </thead>
+			    <tbody id="product_listing_retailer">
+
+			    </tbody>
+			  </table>
+
+
+<!--temporary table ends there-->      
+</div>
+
+
+
+
+
+
+<br/>
+<hr>
+<!---Ending input ---->
+<div class="column-5">
+	<table >
+		<tr >
+			<th style="text-align:right;"> <label for="sub">Sub Total </label><input id="sub"></th>
+			<th style="text-align:right;"> <label for="sub">Others Charge </label><input id="sub"></th>
+			<th style="text-align:right;"> <label for="sub">Discount% </label><input id="sub"></th>
+			<th style="text-align:right;"> <label for="sub">Discount amount </label><input id="sub"></th>
+		</tr>
+		<tr><th></th>
+			<th style="text-align:right;"> <label for="sub">Total </label><input id="sub"></th>
+			<th style="text-align:right;"> <label for="sub">Amount Paid </label><input id="sub"></th>
+			<th style="text-align:right;"> <label for="sub">Balance </label><input id="sub"></th>
+		</tr>
+	</table>	
+</div>
+
+<!---save button ---->
+<div class="column-6" style="right:50px;">
+<button type="submit">Save</button>
+<button type="submit">Print</button>
+<button type="submit">Cancel</button>
+</div>
+<br/>
+
+<!---Monitor--->
+<div class="monitor" id="monitor" style="width:300px;">
+<h3 id="paid_text" Style="display:none; color:green; background:yellow;">Thank you for paid.</h3>
+<h3 id="credit_text" Style="display:none; color:red; background:yellow;">Credit is activate.</h3>
+</div><br/>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<!---JSON Part of Html--->
+
+<script>
+///STARTING RETAIL SALES AREA//// RETAIL SALES NAME AND  PRODUCT INPUT*********
+
+
+
+////////////////SALE TO SALEMAN AREA*******************************888
+
+$(document).on('click','.downarrow',function(){
+
+
+	var quantity=$(this).prev().val();
+	var product=$(this).prev().prev().prev().prev().val();
+	if(quantity=='' || product==''){alert('quantity or product can not be empty')}
+	else{
+		$(this).parent().parent().next().find('tbody').append(
+
+			'<tr class="delsale"><delsale>'+
+			        '<td>'+product+'</td>'+
+			        '<td>'+quantity+'</td>'+
+			        '<td>'+
+			         '<a href="#" class="del"> <img src="/static/img/delete.png" height="25x" width="25px" /></a></td>'+
+			      '</delsale></tr>'
+		);
+
+		var quantity=$(this).prev().val('');
+		var product=$(this).prev().prev().prev().prev().val('');
+
+	};
+});   //end of onclick method of downarrow
+///////// Done saleman product listing ////
+
+
+//***********DELETING ROW STARTED**************
+
+
+$(document).on('click','.delsale',function(){
+
+	$(this).remove();
+
+}) //end of the onclick functiion of row deleting
+
+
+
+
+
+$(document).on('click','.send_button_retail',function(){
+
+	var arr=[];
+	var retailer_name=$('#retailer_name').val();
+	var retailer_address=$('#retailer_address').val();
+	var retailer_name_data={};
+	var retailer_address_data={};
+	retailer_name_data['name']=retailer_name;
+	retailer_address_data['address']=retailer_address;
+
+	$('#product_listing_retailer tr').each(function(){
+
+		var item=$(this).find('td:first').text();
+		var quantity=$(this).find('td:nth-child(2)').text();
+		jso={};
+		jso['product']=item;
+		jso['quantity']=quantity;
+		arr.push(jso)
+
+		
+
+	}); //end of the each function
+
+
+	var data=JSON.stringify(arr);
+	var retailernamestring=JSON.stringify(retailer_name_data);
+	var retaileraddressstring=JSON.stringify(retailer_address_data);
+	 $.ajax({
+
+	 	url:'/retail/sold',
+	 	data:{saledata:data,retailer:retailernamestring,address:retaileraddressstring},
+	 	type:'GET',
+	 	dataType:'json'
+
+	 }) //ending ajax function
+
+	 .done(function(){ alert('successfully sold');
+		$('.send_button_retail').hide();
+
+		window.location.href = '/order_summary'; 
+	})
+
+	 .fail(function(){alert('failed')});
+}) //end of the click event
+
+
+
+
+
+
+
+
+
+
+
+///////////starting raw material stock adding functionality////////////
+
+
+$(document).on('click','#material_stock_button',function(){
+
+	var item=$('#material_name').val();
+	var csrftoken=$("[name=csrfmiddlewaretoken]").val();
+	var quantity=$('#raw_material_quantity').val();
+	if(item=='' || quantity==''){
+
+		alert('please fillup all the required fields');
+	}else{
+		$.ajax({
+			url:'/raw_materials/stock',
+			type:'POST',
+			dataType:'json',
+			data:{item:item,quantity:quantity,csrfmiddlewaretoken:csrftoken}
+
+		})//close of ajax function
+		.done(function(data){
+			alert('successfully added');
+
+				$('#stock_items').empty();
+		for(i=0;i<data.length;i++){
+				$('#stock_items').append(
+				'<tr>'+
+			        '<td>'+data[i].item+'</td>'+
+			        '<td>'+data[i].quantity+'</td>'+
+			        '<td>'+data[i].value+'</td>'+
+			        '<td><rawstockedit><a href="#" data-toggle="modal" stock-id="'+data[i].id+'" data-target="#editmodal"><img src="/static/img/edit.png" height="25px" width="25px" ></a> </rawstockedit></td>'+
+			     '</tr>'
+
+				); //appending in the table
+		};//endfor;
+		
+		
+			$('#material_name').val('');
+			$('#raw_material_quantity').val('');
+
+		})//close of done function
+		.fail(function(){
+			alert('something went wrong')
+		})//fail function ending
+
+	}//end of statement
+
+
+
+})// end of (click function)adding items to stock for materials
+
+
+
+
+</script>
+
+
+
+
+
+</body>
+
+
+
+</html>

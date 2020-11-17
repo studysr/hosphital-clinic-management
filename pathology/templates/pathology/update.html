@@ -1,0 +1,42 @@
+{% extends "pathology/base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container py-2">
+	
+<h3>Update Information</h3>
+
+<div class="">
+<form action="{% url 'update' %}">
+<input type="" name="search_id" class="" placeholder="input ID">
+<input type="submit" name="submit" value="Search">
+</form>
+</div>
+
+
+<br>
+{% for update in updatepay %}
+<form action="{% url 'due_payment' update.id %}">
+	<div class="container">
+<div class="row">
+	<div class="card">
+
+	payment ID: {{ update.id }}<br>
+	Name: {{ update.name }}<br>
+	Total: {{ update.total_after_discount }}<br>
+	Paid: {{ update.amount_paid }}<br>
+	Balance: {{ update.balance }}
+
+<button class="btn btn-primary" type="submit">Edit</button>
+</form>
+{% endfor %}
+</div>
+</div>
+</div>
+</div>
+
+
+
+{% endblock %}

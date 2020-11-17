@@ -1,0 +1,281 @@
+    
+{% extends 'pathology/base.html' %}
+{% block content %}
+
+<!-----for body div size--->
+<style>
+  .container{ max-width: 960px;}
+  .lh-condensed { line-height: 1.25; }
+</style>
+
+<div class="container py-3">
+  <div class="row" id="row_container">
+    <div class="col-md-12 bg-warning rounded">
+		<div class="col-md-12 order-md-1">
+			<h4 class="mb-3">Billing System of TEST<small> <code> Last Bill:</code>{{ obj.id }}-{{ obj.name }} <code> Date:</code> {{ object.ordered_date }} </small></h4>
+				<div class="needs-validation" novalidate>
+				<!---for messege-->
+					<div>
+					  {% if msg %}
+						<h2 style="color: red;">{{ msg|upper }}</h2>
+					  {% endif %}
+					</div>
+				<!---end messege-->
+
+      	
+		<div class="row">
+			<div class="col-md-6 mb-3">
+            <label for="firstName">Name</label>
+            <input type="text" autocomplete="off" class="form-control" id="consumer_name" list="consumer_list_show" value="{{ obj.name }}">
+
+            <datalist class="consumer_list_show" id="consumer_list_show">
+              {% for consum_name in consumers %}
+              <option value="{{consum_name.name}}">
+              {% endfor %}
+            </datalist>
+            <div class="invalid-feedback">
+              Valid first name is required.
+            </div>
+			</div>
+
+
+			<div class="col-md-3 mb-3">
+            <label for="lastName">Age</label>
+            <input type="text" class="form-control" id="age" name="age">
+            <div class="invalid-feedback" style="width: 100%;">
+              Valid last name is required.
+            </div>
+			</div>
+
+
+
+			<div class="col-md-3 mb-3">
+			<label for="username">Mobile or Username</label>
+			<div class="input-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">*</span>
+            </div>
+            <input type="text" class="form-control" id="mobile" placeholder="Username">
+            <div class="invalid-feedback" style="width: 100%;">
+                  Your username is required.
+            </div>
+			</div>
+			</div>
+        </div>
+
+
+		<div class="row">
+			<div class="col-md-6 mb-3">
+			<label for="address">Address</label>
+			<input type="text" autocomplete="off" class="form-control" id="consumer_address" list="consumer_address_show" value="{{ obj.address }}"> 
+          
+			<datalist class="consumer_list_show" id="consumer_address_show">
+            {% for consum_name in consumers %}
+            <option value="{{consum_name.address}}"></option>
+            {% endfor %}
+			</datalist>
+			<div class="invalid-feedback">
+            Please enter your address.
+			</div>
+			</div>
+
+			<div class="col-md-4 mb-4">
+            <label for="lastName">Referde by</label>
+            <input type="text" autocomplete="off" class="form-control" name="referredby" id="referredby" list="referredby_list"><button onclick="document.getElementById('referredby').value = ''">×</button>
+					<datalist class="referredby_list" id="referredby_list">
+		                {% for ref in Refer %}
+		                  <option value="{{ref.name}}" ></option>
+		                {% endfor %}
+		            </datalist>
+            <div class="invalid-feedback" style="width: 100%;">
+              Valid last name is required.
+            </div>
+			</div>
+
+			<div class="col-md-2 mb-2">
+            <label for="lastName">Gender</label>
+	            <select type="text" autocomplete="off" class="form-control" id="gender" name="gender" list="gender">
+				  <option value="Male">Male</option>
+				  <option value="Female">Female</option>
+				</select>
+			</div>
+		</div>
+
+
+
+
+
+
+	<!--for adding multiple OrderItem to actual product-->
+		<div class="row">
+          <div class="col-md-8 mb-3 form-inline" >
+			<label for="usr">Test Name</label>
+			<input type="text" autocomplete="off" class="form-control" name="material-for-product" list="product_list">
+					<datalist class="product_list" id="product_list">
+		                {% for product in product %}
+		                  <option value="{{product.title}}" ></option>
+		                {% endfor %}
+		            </datalist>
+
+	        <label for="usr">Quantity</label>
+	        <input type="number" class="form-control" id="raw_material_price" style="width:90px" value=1>
+	         
+
+			<button class="btn btn-info add_item" height="30" width="30" style="margin-left:10px;">Add</button>
+
+
+			<!--plus new window of sale to saleman-->
+			<button class="btn btn-danger send_button_view" style="margin-left:10px;">View</button>
+			<!--plus new window ends here-->
+		  </div>
+		</div>
+	<!--end of th above comment of multiple OrerItem-->
+
+
+
+
+	<!--temporary table starts here-->
+	<div>
+		<table class="table table-bordered table-hover" style="background-color: white;margin-top: 16px">
+			<thead>
+				<tr>
+					<th>Test name</th>
+					<th style="width: 80px">quantity</th>
+					<th style="width:120px">action</th>
+				</tr>
+			</thead>
+			<tbody id="item_added_list">
+			</tbody>
+		</table>
+	<!--temporary table ends there-->      
+	</div><br/>
+	
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+
+
+
+
+
+<!---JSON Part of Html--->
+<script>
+///STARTING consum SALES AREA//// consum SALES NAME AND  PRODUCT INPUT*********
+
+
+
+////////////////SALE TO SALEMAN AREA*******************************888
+
+$(document).on('click','.add_item',function(){
+
+
+	var quantity=$(this).prev().val();
+	var product=$(this).prev().prev().prev().prev().val();
+	if(quantity=='' || product==''){alert('quantity or name can not be empty!')}
+	else{
+
+		$(this).parent().parent().next().find('tbody').append(
+
+			'<tr class="del_item"><del_item>'+
+			        '<td>'+product+'</td>'+
+			        '<td>'+quantity+'</td>'+
+			        '<td>'+
+			         '<a href="#" class="del"> <img src="/static/img/delete.png" height="25x" width="25px" /></a></td>'+
+			      '</del_item></tr>'
+				);
+
+		var quantity=$(this).prev().val('1');
+		var product=$(this).prev().prev().prev().prev().val('');
+	};
+
+});   //end of onclick method of add_item
+///////// Done product listing ////
+
+//***********DELETING ROW STARTED**************
+
+$(document).on('click','.del_item',function(){
+
+	$(this).remove();
+
+}) //end of the onclick functiion of row deleting
+
+
+
+
+
+
+
+$(document).on('click','.send_button_view',function(){
+	var arr=[];
+	var consumer_name=$('#consumer_name').val();
+	var consumer_address=$('#consumer_address').val();
+	var age=$('#age').val();
+	console.log(age)
+	var mobile=$('#mobile').val();
+	var referredby=$('#referredby').val();
+	var gender =$('#gender').val();
+
+
+	var consumer_name_data={};
+	var consumer_address_data={};
+	var age_data={};
+	var mobile_data={};
+	var referrdeby_data={};
+	var gender_data={};
+
+
+	//get data from form
+	consumer_name_data['name']=consumer_name;
+	consumer_address_data['address']=consumer_address;
+	age_data['age']=age;
+	mobile_data['mobile']=mobile;
+	gender_data['gender']=gender;
+	referrdeby_data['referredby']=referredby;
+
+	//get all data from table
+	$('#item_added_list tr').each(function(){
+
+		var item=$(this).find('td:first').text();
+		var quantity=$(this).find('td:nth-child(2)').text();
+		jso={};
+		jso['product']=item;
+		jso['quantity']=quantity;
+		arr.push(jso)
+	}); //end of the each function
+
+
+	//make string 
+	var data=JSON.stringify(arr);
+	var consumernamestring=JSON.stringify(consumer_name_data);
+	var consumeraddressstring=JSON.stringify(consumer_address_data);
+	var agestring=JSON.stringify(age_data);
+	var mobilestring=JSON.stringify(mobile_data);
+	var genderstring=JSON.stringify(gender_data);
+	var referredbystring=JSON.stringify(referrdeby_data);
+
+
+	 $.ajax({
+	 	url:'/orderitem_save',
+	 	data:{saledata:data,consumer:consumernamestring,address:consumeraddressstring,age:agestring, mobile:mobilestring,gender:genderstring,referredby:referredbystring},
+	 	type:'GET',
+	 	dataType:'json'
+	 }) //ending ajax function
+
+	 .done(function(){ alert('Successfull');
+		$('.send_button_view').hide();
+		window.location.href = '/order_summary'; 
+	})
+	 .fail(function(){alert('failed')});
+}) //end of the click event
+
+
+
+
+
+</script>
+		
+{% endblock %}
+
+  
