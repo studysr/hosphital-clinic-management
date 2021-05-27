@@ -1,3 +1,5 @@
+![Capture-3](https://user-images.githubusercontent.com/61598502/119889725-c2bb1580-bf58-11eb-8b46-c22ea4c4069e.JPG)
+![Capture-6](https://user-images.githubusercontent.com/61598502/119889761-cc447d80-bf58-11eb-9470-a99604318f1a.JPG)
 # hosphital-clinic-management
 Hosphital Clinic Diagnosticand Pathology management
 
